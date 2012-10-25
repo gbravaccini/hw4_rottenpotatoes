@@ -64,4 +64,14 @@ class MoviesController < ApplicationController
     redirect_to movies_path
   end
 
+  def find
+    id = params[:id] # retrieve movie ID from URI route
+    @movie = Movie.find(id) # look up movie by unique ID
+    @movies = Movie.find_all_by_director @movie.director
+    if @movies.size <= 1
+      flash[:no_result] = "Director not defined for '#{@movie.title}'"
+      flash.keep
+      redirect_to movies_path
+    end
+  end
 end
